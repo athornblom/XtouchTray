@@ -156,5 +156,7 @@ namespace NK2Tray
                 buttonsMappingTable.Add(button.controller, button);
             }
         }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NAudio.Midi;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NK2Tray
 {
@@ -48,94 +49,7 @@ namespace NK2Tray
                 midiOut.Send(new NoteOnEvent(0, 1, controller, state ? 127 : 0, 0).GetAsShortMessage());
         }
 
-        public bool HandleEvent(MidiInMessageEventArgs e, MidiDevice device)
-        {
-            if (!IsHandling())
-            {
-                SetHandling(true);
-
-                if (e.MidiEvent.CommandCode != commandCode)
-                    return false;
-
-                int c;
-
-                if (commandCode == MidiCommandCode.ControlChange)
-                {
-                    var me = (ControlChangeEvent)e.MidiEvent;
-
-                    if (me.Channel != channel || me.ControllerValue != 127) // Only on correct channel and button-down (127)
-                        return false;
-
-                    c = (int)me.Controller;
-                }
-                else if (commandCode == MidiCommandCode.NoteOn)
-                {
-                    var me = (NoteEvent)e.MidiEvent;
-
-                    if (me.Channel != channel || me.Velocity != 127) // Only on correct channel and button-down (127)
-                        return false;
-
-                    c = me.NoteNumber;
-                }
-                else
-                    return false;
-
-                if (c == controller)
-                {
-                    switch (buttonType)
-                    {
-                        case ButtonType.MediaNext:
-                            MediaTools.Next();
-                            break;
-                        case ButtonType.MediaPrevious:
-                            MediaTools.Previous();
-                            break;
-                        case ButtonType.MediaStop:
-                            MediaTools.Stop();
-                            break;
-                        case ButtonType.MediaPlay:
-                            MediaTools.Play();
-                            break;
-                        case ButtonType.MediaRecord:
-                            device.LightShow();
-                            break;
-                        case ButtonType.McBtn:
-                            if (light) // Light
-                            {
-                                SetLight(false);
-                                light = false;
-                                MidiDevice.McButtonState = false;
-                            }
-                            else
-                            {
-                                SetLight(true);
-                                light = true;
-                                MidiDevice.McButtonState = true;
-                            }
-                            break;
-                        case ButtonType.LayerA:
-                            device.buttonsMappingTable[85].
-                            SetLight(true);
-                            light = true;
-                            MidiDevice.MainLayer = true;
-
-                            break;
-                        case ButtonType.LayerB:
-                            device.buttonsMappingTable[84]
-                            SetLight(true);
-                            light = true;
-                            MidiDevice.MainLayer = false;
-                            break;
-                      
-                        default:
-                            break;
-                    }
-                    return true;
-                }
-            }
-
-            return false;
-        }
+       
 
         public bool IsHandling()
         {
@@ -148,6 +62,8 @@ namespace NK2Tray
         }
 
         public bool GetLight() { return light; }
+
+       
 
     }
 }

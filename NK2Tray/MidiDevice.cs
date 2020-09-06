@@ -94,14 +94,12 @@ namespace NK2Tray
             Debug.WriteLine(e.MidiEvent);
 
 
-            if(MainLayer)
-            { 
                 foreach (var fader in faders)
                 {
                     fader.HandleEvent(e);
                     fader.SetHandling(false);
                 }
-
+                
                 //ControlChangeEvent midiController = null;
                 //
                 //try
@@ -130,13 +128,119 @@ namespace NK2Tray
                 {
                     foreach (var button in buttons)
                     {
-                        button.HandleEvent(e, this);
+                        HandleEvent(e, button);
                         button.SetHandling(false);
                     }
                 }
+            
+        }
+        public bool HandleEvent(MidiInMessageEventArgs e, Button btn)
+        {
+            if (!btn.IsHandling())
+            {
+                btn.SetHandling(true);
+
+                if (e.MidiEvent.CommandCode != btn.commandCode)
+                    return false;
+
+                int c;
+
+                if (btn.commandCode == MidiCommandCode.ControlChange)
+                {
+                    var me = (ControlChangeEvent)e.MidiEvent;
+
+                    if (me.Channel != btn.channel || me.ControllerValue != 127) // Only on correct channel and button-down (127)
+                        return false;
+
+                    c = (int)me.Controller;
+                }
+                else if (btn.commandCode == MidiCommandCode.NoteOn)
+                {
+                    var me = (NoteEvent)e.MidiEvent;
+
+                    if (me.Channel != btn.channel || me.Velocity != 127) // Only on correct channel and button-down (127)
+                        return false;
+
+                    c = me.NoteNumber;
+                }
+                else
+                    return false;
+
+                if (c == btn.controller)
+                {
+                    switch (btn.buttonType)
+                    {
+                        case ButtonType.MediaNext:
+                            MediaTools.Next();
+                            break;
+                        case ButtonType.MediaPrevious:
+                            MediaTools.Previous();
+                            break;
+                        case ButtonType.MediaStop:
+                            MediaTools.Stop();
+                            break;
+                        case ButtonType.MediaPlay:
+                            MediaTools.Play();
+                            break;
+                        case ButtonType.MediaRecord:
+                            this.LightShow();
+                            break;
+                        case ButtonType.McBtn:
+                            if (MainLayer) { 
+                                if (btn.GetLight()) // Light
+                                {
+                                    btn.SetLight(false);
+                                    McButtonState = false;
+                                }
+                                else
+                                {
+                                    btn.SetLight(true);
+                                    McButtonState = true;
+                                }
+                            }
+                            break;
+                        case ButtonType.LayerA:
+                            layerSwitch(btn, true);
+                            break;
+                        case ButtonType.LayerB:
+                            layerSwitch(btn,false);
+                            break;
+
+                        default:
+                            break;
+                    }
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        public void layerSwitch(Button btn,bool layerA)
+        {
+
+            TurnOfAllLights();
+            btn.SetLight(true);
+            MainLayer = layerA;
+            if (MainLayer)
+            {
+                foreach (var btn2 in buttons)
+                {
+                    if(!btn2.buttonType.Equals("LayerB"))
+                    SetLight(btn2.controller, btn2.GetLight());
+                }
+                SetLight(btn.controller +1, false);
             }
         }
 
+        public void TurnOfAllLights()
+        {
+            foreach (var btn in buttons)
+            {
+                SetLight(btn.controller, false);
+            }
+            //foreach (var i in Enumerable.Range(0, 128))
+            //   midiOut.Send(new ControlChangeEvent(0, 1, (MidiController)i, 0).GetAsShortMessage());
+        }
         public virtual void ResetAllLights() { }
 
         public virtual void LightShow() { }

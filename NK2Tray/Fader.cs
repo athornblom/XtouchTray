@@ -1,6 +1,7 @@
 ﻿using NAudio.Midi;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace NK2Tray
@@ -341,55 +342,65 @@ namespace NK2Tray
                 // Fader match
                 if (assigned && Match(faderNumber, e.MidiEvent, faderDef.faderCode, faderDef.faderOffset, faderDef.faderChannelOverride))
                 {
-                    if (assignment.sessionType == SessionType.Application)
+                    if (MidiDevice.MainLayer)
                     {
-                        MixerSession newAssignment = assignment.devices.FindMixerSession(assignment.sessionIdentifier); //update list for re-routered app, but only overrides
-                        if (newAssignment == null)                                                                      //if there is new assignments, otherwise, there is no more a inactive
-                        {                                                                                               //MixerSession to hold the label
+                        if (assignment.sessionType == SessionType.Application)
+                        {
+                            MixerSession newAssignment = assignment.devices.FindMixerSession(assignment.sessionIdentifier); //update list for re-routered app, but only overrides
+                            if (newAssignment == null)                                                                      //if there is new assignments, otherwise, there is no more a inactive
+                            {                                                                                               //MixerSession to hold the label
+                                SetRecordLight(true);
+                                return true;
+                            }
+                            assignment = newAssignment;
+                        }
+
+                        float newVol;
+
+                        if (faderDef.delta)
+                        {
+                            var val = GetValue(e.MidiEvent);
+                            var volNow = assignment.GetVolume();
+                            var nearestStep = steps.Select((x, i) => new { Index = i, Distance = Math.Abs(volNow - x) }).OrderBy(x => x.Distance).First().Index;
+                            int nextStepIndex;
+
+                            var volumeGoingDown = val > faderDef.range / 2;
+
+                            if (volumeGoingDown)
+                                nextStepIndex = Math.Max(nearestStep - 1, 0);
+                            else
+                                nextStepIndex = Math.Min(nearestStep + 1, steps.Length - 1);
+
+                            newVol = steps[nextStepIndex];
+                            assignment.SetVolume(newVol);
+                        }
+                        else
+                        {
+                            newVol = getVolFromStage(GetValue(e.MidiEvent));
+                            assignment.SetVolume(newVol);
+                        }
+
+                        if (assignment.IsDead())
+                        {
                             SetRecordLight(true);
+
                             return true;
                         }
-                        assignment = newAssignment;
-                    }
 
-                    float newVol;
-
-                    if (faderDef.delta)
-                    {
-                        var val = GetValue(e.MidiEvent);
-                        var volNow = assignment.GetVolume();
-                        var nearestStep = steps.Select((x, i) => new { Index = i, Distance = Math.Abs(volNow - x) }).OrderBy(x => x.Distance).First().Index;
-                        int nextStepIndex;
-
-                        var volumeGoingDown = val > faderDef.range / 2;
-
-                        if (volumeGoingDown)
-                            nextStepIndex = Math.Max(nearestStep - 1, 0);
-                        else
-                            nextStepIndex = Math.Min(nearestStep + 1, steps.Length - 1);
-
-                        newVol = steps[nextStepIndex];
-                        assignment.SetVolume(newVol);
+                        List<Fader> fadersToAffect = GetMatchingFaders();
+                        fadersToAffect.ForEach(fader => fader.parent.SetVolumeIndicator(fader.faderNumber, newVol));
                     }
                     else
                     {
-                        newVol = getVolFromStage(GetValue(e.MidiEvent));
-                        assignment.SetVolume(newVol);
+                        //layer B implementation
                     }
-
-                    if (assignment.IsDead())
-                    {
-                        SetRecordLight(true);
-
-                        return true;
-                    }
-
-                    List<Fader> fadersToAffect = GetMatchingFaders();
-                    fadersToAffect.ForEach(fader => fader.parent.SetVolumeIndicator(fader.faderNumber, newVol));
-
                     return true;
                 }
+                //<--------------------------------------------------- >
+                //                        buttons
+                //<--------------------------------------------------- >
 
+              
                 // Select match
                 if (
                     faderDef.selectPresent
@@ -400,23 +411,30 @@ namespace NK2Tray
                     if (GetValue(e.MidiEvent) != 127) // Only on button-down
                         return true;
 
-                    Console.WriteLine($@"Attempting to assign current window to fader {faderNumber}");
-                    if (assigned)
+                    if (MidiDevice.MainLayer)
                     {
-                        Unassign();
-                        parent.SaveAssignments();
-                    }
-                    else
-                    {
-                        var pid = WindowTools.GetForegroundPID();
-                        var mixerSession = parent.audioDevices.FindMixerSession(pid);
-                        if (mixerSession != null)
+                        Console.WriteLine($@"Attempting to assign current window to fader {faderNumber}");
+                        if (assigned)
                         {
-                            Assign(mixerSession);
+                            Unassign();
                             parent.SaveAssignments();
                         }
                         else
-                            Console.WriteLine($@"MixerSession not found for pid {pid}");
+                        {
+                            var pid = WindowTools.GetForegroundPID();
+                            var mixerSession = parent.audioDevices.FindMixerSession(pid);
+                            if (mixerSession != null)
+                            {
+                                Assign(mixerSession);
+                                parent.SaveAssignments();
+                            }
+                            else
+                                Console.WriteLine($@"MixerSession not found for pid {pid}");
+                        }
+                    }
+                    else
+                    {
+                        //Layer B implementation
                     }
                     return true;
                 }
@@ -429,26 +447,32 @@ namespace NK2Tray
                     && MidiDevice.McButtonState == false
                 )
                 {
-                    if (GetValue(e.MidiEvent) != 127) // Only on button-down
-                        return true;
+                   if (GetValue(e.MidiEvent) != 127) // Only on button-down
+                       return true;
 
-                    var muteStatus = assignment.ToggleMute();
-                    SetMuteLight(muteStatus);
+                    if (MidiDevice.MainLayer) { 
+                        var muteStatus = assignment.ToggleMute();
+                        SetMuteLight(muteStatus);
 
-                    if (assignment.IsDead())
-                    {
-                        SetRecordLight(true);
+                        if (assignment.IsDead()) // hmmm tror inte detta funkar
+                        {
+                            SetRecordLight(true);
 
-                        return true;
+                            return true;
+                        }
+
+                        List<Fader> fadersToAffect = GetMatchingFaders();
+                        fadersToAffect.ForEach(fader => fader.SetMuteLight(muteStatus));
                     }
-
-                    List<Fader> fadersToAffect = GetMatchingFaders();
-                    fadersToAffect.ForEach(fader => fader.SetMuteLight(muteStatus));
+                    else
+                    {
+                        //Layer B implementation
+                    }
 
                     return true;
                 }
 
-                // Record match
+                // Record match // hmm va e ens detta??
                 if (
                     faderDef.recordPresent
                     && assigned
@@ -458,14 +482,19 @@ namespace NK2Tray
                 {
                     if (GetValue(e.MidiEvent) != 127) // Only on button-down
                         return true;
-
-                    if (WindowTools.IsProcessByNameRunning(applicationName))
-                        SetRecordLight(false);
+                    if (MidiDevice.MainLayer)
+                    {
+                        if (WindowTools.IsProcessByNameRunning(applicationName))
+                            SetRecordLight(false);
+                        else
+                        {
+                            WindowTools.StartApplication(applicationPath);
+                        }
+                    }
                     else
                     {
-                        WindowTools.StartApplication(applicationPath);
+                        //LayerB implementation 
                     }
-
                     return true;
                 }
             }
