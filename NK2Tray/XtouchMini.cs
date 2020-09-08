@@ -147,7 +147,8 @@ namespace NK2Tray
             buttons.Add(new Button(ref midiOut,  ButtonType.MediaRecord,   95, false, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut,  ButtonType.McBtn,         87, false, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut,  ButtonType.LayerA,        84, true, MidiCommandCode.NoteOn));
-            buttons.Add(new Button(ref midiOut,  ButtonType.LayerB,        85, false, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut,  ButtonType.LayerB,        , false, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro1, 85, true, MidiCommandCode.NoteOn));
 
 
             buttonsMappingTable = new Hashtable();
@@ -160,3 +161,4 @@ namespace NK2Tray
 
     }
 }
+[€
