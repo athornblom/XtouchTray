@@ -22,8 +22,8 @@ namespace NK2Tray
         public const int VK_NUMPAD_2 = 0x62;
         public const int VK_NUMPAD_1 = 0x61;
         public const int VK_NUMPAD_0 = 0x60;
-        public const int VK_CONTROL = 0x11;
-        public const int VK_ALT = 0x12;
+        public const int VK_CONTROL = 0x14;
+        public const int VK_ALT = 0x11;
 
         public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
