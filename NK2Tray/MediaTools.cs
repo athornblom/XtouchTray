@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NAudio.Wave;
+using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace NK2Tray
@@ -12,7 +14,7 @@ namespace NK2Tray
         public const int VK_MEDIA_PLAY_PAUSE = 0xB3;
         public const int VK_MEDIA_PREV_TRACK = 0xB1;
         public const int VK_MEDIA_STOP = 0xB2;
-        public const int VK_NUMPAD_9 = 0x69;
+       /* public const int VK_NUMPAD_9 = 0x69;
         public const int VK_NUMPAD_8 = 0x68;
         public const int VK_NUMPAD_7 = 0x67;
         public const int VK_NUMPAD_6 = 0x66;
@@ -23,7 +25,7 @@ namespace NK2Tray
         public const int VK_NUMPAD_1 = 0x61;
         public const int VK_NUMPAD_0 = 0x60;
         public const int VK_CONTROL = 0x14;
-        public const int VK_ALT = 0x11;
+        public const int VK_ALT = 0x11;*/
 
         public const int KEYEVENTF_EXTENDEDKEY = 0x0001; //Key down flag
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
@@ -52,14 +54,30 @@ namespace NK2Tray
             keybd_event(VK_MEDIA_PREV_TRACK, 0, KEYEVENTF_EXTENDEDKEY, IntPtr.Zero);
             keybd_event(VK_MEDIA_PREV_TRACK, 0, KEYEVENTF_KEYUP, IntPtr.Zero);
         }
-        public static void button1()
+        public static void button1(int select)
         {
-            keybd_event(VK_CONTROL, 0, KEYEVENTF_EXTENDEDKEY, IntPtr.Zero);
-            keybd_event(VK_ALT, 0, KEYEVENTF_EXTENDEDKEY, IntPtr.Zero);
-            keybd_event(VK_NUMPAD_8, 0, KEYEVENTF_EXTENDEDKEY, IntPtr.Zero);
-            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, IntPtr.Zero);
-            keybd_event(VK_ALT, 0, KEYEVENTF_KEYUP, IntPtr.Zero);
-            keybd_event(VK_NUMPAD_8, 0, KEYEVENTF_KEYUP, IntPtr.Zero);
+            string source;
+            if (select == 1)
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Bruh.wav";
+            else if(select == 2)
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\FBI.wav";
+            else
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\onetap.wav";
+            play(source);
+        }
+
+        public static void play(string path)
+        {
+            WaveFileReader wav = new WaveFileReader(path);
+            //var output = new WaveOutEvent { DeviceNumber = 0 };
+            var output2 = new WaveOutEvent { DeviceNumber = 1 };
+           // output.Init(wav);
+            output2.Init(wav);
+            //output.Play();
+            output2.Play();
+            //wav.Dispose();
+           // output2.Dispose();
+
         }
 
     }

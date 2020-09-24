@@ -149,6 +149,8 @@ namespace NK2Tray
             buttons.Add(new Button(ref midiOut,  ButtonType.LayerA,        84, true, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut,  ButtonType.LayerB,        85, false, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut, ButtonType.Macro1, 89, true, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro2, 90, true, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro3, 40, true, MidiCommandCode.NoteOn));
 
 
             buttonsMappingTable = new Hashtable();

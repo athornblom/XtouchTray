@@ -206,8 +206,21 @@ namespace NK2Tray
                             layerSwitch(btn,false);
                             break;
                         case ButtonType.Macro1:
-                            if(!MainLayer)
-                            MediaTools.button1();
+                            if (MainLayer) {
+                                MediaTools.button1(1);
+                            }
+                            break;
+                        case ButtonType.Macro2:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(2);
+                            }
+                            break;
+                        case ButtonType.Macro3:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(3);
+                            }
                             break;
 
                         default:

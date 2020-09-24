@@ -15,7 +15,14 @@ namespace NK2Tray
         McBtn,
         LayerA,
         LayerB,
-        Macro1
+        Macro1,
+        Macro2,
+        Macro3,
+        Macro4,
+        Macro5,
+        Macro6,
+        Macro7,
+        Macro8
 
     }
 
