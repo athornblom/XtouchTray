@@ -61,8 +61,11 @@ namespace NK2Tray
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Bruh.wav";
             else if(select == 2)
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\FBI.wav";
-            else
+            else if(select == 3)
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\onetap.wav";
+            else
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Snusk.wav";
+
             play(source);
         }
 

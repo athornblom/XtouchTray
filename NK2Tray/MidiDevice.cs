@@ -222,6 +222,12 @@ namespace NK2Tray
                                 MediaTools.button1(3);
                             }
                             break;
+                        case ButtonType.Macro4:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(4);
+                            }
+                            break;
 
                         default:
                             break;
