@@ -228,6 +228,30 @@ namespace NK2Tray
                                 MediaTools.button1(4);
                             }
                             break;
+                        case ButtonType.Macro5:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(5);
+                            }
+                            break;
+                        case ButtonType.Macro6:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(6);
+                            }
+                            break;
+                        case ButtonType.Macro7:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(7);
+                            }
+                            break;
+                        case ButtonType.Macro8:
+                            if (MainLayer)
+                            {
+                                MediaTools.button1(8);
+                            }
+                            break;
 
                         default:
                             break;

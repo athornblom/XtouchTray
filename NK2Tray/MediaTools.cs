@@ -63,8 +63,16 @@ namespace NK2Tray
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\FBI.wav";
             else if(select == 3)
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\onetap.wav";
-            else
+            else if(select == 4)
                 source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Snusk.wav";
+            else if (select == 5)
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\barn.wav";
+            else if (select == 6)
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Unstop.wav";
+            else if (select == 7)
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\ens.wav";
+            else
+                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Fuskaj.wav";
 
             play(source);
         }
@@ -72,11 +80,13 @@ namespace NK2Tray
         public static void play(string path)
         {
             WaveFileReader wav = new WaveFileReader(path);
-            //var output = new WaveOutEvent { DeviceNumber = 0 };
+            WaveFileReader wav2 = new WaveFileReader(path);
+            var output = new WaveOutEvent { DeviceNumber = 0 };
             var output2 = new WaveOutEvent { DeviceNumber = 1 };
-           // output.Init(wav);
-            output2.Init(wav);
-            //output.Play();
+
+            output.Init(wav);
+            output2.Init(wav2);
+            output.Play();
             output2.Play();
             //wav.Dispose();
            // output2.Dispose();

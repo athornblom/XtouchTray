@@ -152,7 +152,10 @@ namespace NK2Tray
             buttons.Add(new Button(ref midiOut, ButtonType.Macro2, 90, true, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut, ButtonType.Macro3, 40, true, MidiCommandCode.NoteOn));
             buttons.Add(new Button(ref midiOut, ButtonType.Macro4, 41, true, MidiCommandCode.NoteOn));
-
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro5, 42, true, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro6, 43, true, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro7, 44, true, MidiCommandCode.NoteOn));
+            buttons.Add(new Button(ref midiOut, ButtonType.Macro8, 45, true, MidiCommandCode.NoteOn));
 
             buttonsMappingTable = new Hashtable();
             foreach (var button in buttons)
