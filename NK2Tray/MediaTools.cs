@@ -58,21 +58,21 @@ namespace NK2Tray
         {
             string source;
             if (select == 1)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Bruh.wav";
+                source = @"..\..\..\NK2Tray\Sounds\bruh.wav";
             else if(select == 2)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\FBI.wav";
+                source = @"..\..\..\NK2Tray\Sounds\FBI.wav";
             else if(select == 3)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\onetap.wav";
+                source = @"..\..\..\NK2Tray\Sounds\onetap.wav";
             else if(select == 4)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Snusk.wav";
+                source = @"..\..\..\NK2Tray\Sounds\Snusk.wav";
             else if (select == 5)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\barn.wav";
+                source = @"..\..\..\NK2Tray\Sounds\barn.wav";
             else if (select == 6)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Unstop.wav";
+                source = @"..\..\..\NK2Tray\Sounds\Unstop.wav";
             else if (select == 7)
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\ens.wav";
+                source = @"..\..\..\NK2Tray\Sounds\ens.wav";
             else
-                source = @"C:\Users\Adamt\OneDrive\Dokument\GitHub\XtouchTray\NK2Tray\Sounds\Fuskaj.wav";
+                source = @"..\..\..\NK2Tray\Sounds\Fuskaj.wav";
 
             play(source);
         }
