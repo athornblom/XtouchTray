@@ -200,57 +200,36 @@ namespace NK2Tray
                             }
                             break;
                         case ButtonType.LayerA:
+                            if(!MainLayer)
                             layerSwitch(btn, true);
                             break;
                         case ButtonType.LayerB:
-                            layerSwitch(btn,false);
+                            if (MainLayer)
+                                layerSwitch(btn,false);
                             break;
                         case ButtonType.Macro1:
-                            if (MainLayer) {
-                                MediaTools.button1(1);
-                            }
+                                MediaTools.button1(1,MainLayer);
                             break;
                         case ButtonType.Macro2:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(2);
-                            }
+                                MediaTools.button1(2, MainLayer);
                             break;
                         case ButtonType.Macro3:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(3);
-                            }
+                            MediaTools.button1(3, MainLayer);
                             break;
                         case ButtonType.Macro4:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(4);
-                            }
+                            MediaTools.button1(4, MainLayer);
                             break;
                         case ButtonType.Macro5:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(5);
-                            }
+                            MediaTools.button1(5, MainLayer);
                             break;
                         case ButtonType.Macro6:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(6);
-                            }
+                            MediaTools.button1(6, MainLayer);
                             break;
                         case ButtonType.Macro7:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(7);
-                            }
+                            MediaTools.button1(7, MainLayer);
                             break;
                         case ButtonType.Macro8:
-                            if (MainLayer)
-                            {
-                                MediaTools.button1(8);
-                            }
+                            MediaTools.button1(8, MainLayer);
                             break;
 
                         default:

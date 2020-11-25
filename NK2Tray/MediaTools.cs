@@ -54,11 +54,15 @@ namespace NK2Tray
             keybd_event(VK_MEDIA_PREV_TRACK, 0, KEYEVENTF_EXTENDEDKEY, IntPtr.Zero);
             keybd_event(VK_MEDIA_PREV_TRACK, 0, KEYEVENTF_KEYUP, IntPtr.Zero);
         }
-        public static void button1(int select)
+        public static void button1(int select, bool layerA)
         {
             string source;
+           
             if (select == 1)
-                source = @"..\..\..\NK2Tray\Sounds\bruh.wav";
+                if(layerA)
+                    source = @"..\..\..\NK2Tray\Sounds\bruh.wav";
+                else
+                    source = @"..\..\..\NK2Tray\Sounds\GodFuckingMorgon.wav";
             else if(select == 2)
                 source = @"..\..\..\NK2Tray\Sounds\FBI.wav";
             else if(select == 3)
